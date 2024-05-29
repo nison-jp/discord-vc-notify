@@ -17,13 +17,21 @@ $discord = new Discord([
         | Intents::GUILD_VOICE_STATES
 ]);
 
-$discord->on('ready', function (Discord $discord) {
+$notified_sessions = [];
+
+$discord->on('ready', function (Discord $discord) use (&$notified_sessions) {
     echo "Bot is ready!", PHP_EOL;
 
-    $discord->on(Event::VOICE_STATE_UPDATE, function (VoiceStateUpdate $voiceStateUpdate, Discord $discord) {
-        
-        $sendingMessage = "{$voiceStateUpdate->user?->username} joined {$voiceStateUpdate->channel?->name}. " . PHP_EOL;
-        $voiceStateUpdate->channel?->sendMessage($sendingMessage);
+    $discord->on(Event::VOICE_STATE_UPDATE, function (VoiceStateUpdate $voiceStateUpdate, Discord $discord) use (&$notified_sessions) {
+        if (!isset($notified_sessions[$voiceStateUpdate->session_id]) || $notified_sessions[$voiceStateUpdate->session_id] != $voiceStateUpdate->channel_id) {
+            $sendingMessage = "{$voiceStateUpdate->user?->username} joined {$voiceStateUpdate->channel?->name}. " . PHP_EOL;
+            $voiceStateUpdate->channel?->sendMessage($sendingMessage);
+            $notified_sessions[$voiceStateUpdate->session_id] = $voiceStateUpdate->channel_id;
+        }
+        if (is_null($voiceStateUpdate->channel_id)) {
+            unset($notified_sessions[$voiceStateUpdate->session_id]);
+        }
+        echo "session table length is now: " . count($notified_sessions) . PHP_EOL;
     });
 });
 pcntl_signal(SIGTERM, function () use ($discord) {
