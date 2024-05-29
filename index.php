@@ -26,5 +26,8 @@ $discord->on('ready', function (Discord $discord) {
         $voiceStateUpdate->channel?->sendMessage($sendingMessage);
     });
 });
-pcntl_signal(SIGTERM, fn () => $discord->close());
+pcntl_signal(SIGTERM, function () use ($discord) {
+    echo "Received SIGTERM, shutting down..." . PHP_EOL;
+    $discord->close();
+});
 $discord->run();

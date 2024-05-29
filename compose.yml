@@ -1,6 +1,6 @@
 services:
   app:
-    image: 'php:cli-alpine'
+    build: .
     volumes:
       - .:/app
     command: php /app/index.php
