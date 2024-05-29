@@ -1,0 +1,7 @@
+services:
+  app:
+    image: 'php:cli-alpine'
+    volumes:
+      - .:/app
+    command: php /app/index.php
+    restart: always

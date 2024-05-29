@@ -1,0 +1,22 @@
+{
+    "name": "nison-jp/discord-bot",
+    "type": "project",
+    "require": {
+        "team-reflex/discord-php": "^7.3",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "NisonJp\\DiscordBot\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "nison",
+            "email": "mail@nison.jp"
+        }
+    ],
+    "require-dev": {
+        "symfony/var-dumper": "^7.0"
+    }
+}
